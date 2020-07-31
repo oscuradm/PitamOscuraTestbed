@@ -1,0 +1,33 @@
+/* G4UserSteppingAction is used to specify actions taken at each step
+ * of the simulation
+ */
+
+#ifndef SteppingAction_h
+#define SteppingAction_h
+
+#include "G4UserSteppingAction.hh"
+#include "globals.hh"
+
+
+class EventAction;
+
+class G4LogicalVolume;
+
+
+class SteppingAction : public G4UserSteppingAction{
+
+    public:
+        SteppingAction(EventAction* _eventAction);
+        virtual ~SteppingAction();
+
+
+        virtual void UserSteppingAction(const G4Step*);
+
+    private:
+        EventAction* fEventAction;
+        G4LogicalVolume* fScoringVolume;
+
+};
+
+
+#endif

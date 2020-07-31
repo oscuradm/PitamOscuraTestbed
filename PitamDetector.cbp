@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="PitamDetector" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="Debug">
+				<Option output="bin/Debug/PitamDetector" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Debug/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-g" />
+				</Compiler>
+			</Target>
+			<Target title="Release">
+				<Option output="bin/Release/PitamDetector" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Release/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-O2" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+				</Linker>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-Wall" />
+			<Add option="-fexceptions" />
+		</Compiler>
+		<Unit filename="CMakeLists.txt" />
+		<Unit filename="DetectorConstruction/OSimDetectorConstruction.cc" />
+		<Unit filename="DetectorConstruction/OSimDetectorConstruction.hh" />
+		<Unit filename="DetectorConstruction/OscuraBuildingBlocks.cc" />
+		<Unit filename="DetectorConstruction/OscuraBuildingBlocks.hh" />
+		<Unit filename="SimActions/ActionInitialization.cc" />
+		<Unit filename="SimActions/ActionInitialization.hh" />
+		<Unit filename="SimActions/EventAction.cc" />
+		<Unit filename="SimActions/EventAction.hh" />
+		<Unit filename="SimActions/PrimaryGenerator.cc" />
+		<Unit filename="SimActions/PrimaryGenerator.hh" />
+		<Unit filename="SimActions/RunAction.cc" />
+		<Unit filename="SimActions/RunAction.hh" />
+		<Unit filename="SimActions/SteppingAction.cc" />
+		<Unit filename="SimActions/SteppingAction.hh" />
+		<Unit filename="pitam1.cc" />
+		<Extensions />
+	</Project>
+</CodeBlocks_project_file>
