@@ -4,7 +4,7 @@
 
 #include "RunAction.hh"
 #include "PrimaryGenerator.hh"
-#include "PitamDetectorConstruction.hh"
+#include "OSimDetectorConstruction.hh"
 
 
 #include "G4RunManager.hh"
@@ -71,7 +71,7 @@ void PitamRunAction::EndOfRunAction(const G4Run* run)
     if (rms > 0.) rms = std::sqrt(rms); else rms = 0.;
 
 
-    const PitamDetectorConstruction* detectorConstruction = static_cast<const PitamDetectorConstruction*>(G4RunManager::GetRunManager()->GetUserDetectorConstruction());
+    const OSimDetectorConstruction* detectorConstruction = static_cast<const OSimDetectorConstruction*>(G4RunManager::GetRunManager()->GetUserDetectorConstruction());
     G4double mass = detectorConstruction->GetScoringVolume()->GetMass();
     G4double dose = edep/mass;
     G4double rmsDose = rms/mass;

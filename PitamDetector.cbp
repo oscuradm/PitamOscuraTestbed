@@ -45,6 +45,7 @@
 		<Unit filename="SimActions/PrimaryGenerator.hh" />
 		<Unit filename="SimActions/RunAction.cc" />
 		<Unit filename="SimActions/RunAction.hh" />
+		<Unit filename="SimActions/SimGlobalSettings.hh" />
 		<Unit filename="SimActions/SteppingAction.cc" />
 		<Unit filename="SimActions/SteppingAction.hh" />
 		<Unit filename="pitam1.cc" />

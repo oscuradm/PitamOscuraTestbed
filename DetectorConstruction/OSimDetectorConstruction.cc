@@ -1,7 +1,7 @@
 /*Test detector construction by PITAM for G4 Tutorial*/
 
 
-#include "PitamDetectorConstruction.hh"
+#include "OSimDetectorConstruction.hh"
 #include "OscuraBuildingBlocks.hh"
 
 #include "SimGlobalSettings.hh"
@@ -67,53 +67,56 @@ G4VPhysicalVolume* OSimDetectorConstruction::Construct(){
 
 
     /*Oscura building blocks*/
-    OscuraDetectorGeometry _OSCGeom = new OscuraDetectorGeometry()
-    /*place the flange*/
+    OscuraDetectorGeometry _OSCGeom(logicWorld);
 
-    G4Material* flange_mat = nist->FindOrBuildMaterial("G4_STAINLESS-STEEL");
-    G4ThreeVector flange_pos = G4ThreeVector(0,0,FlangeZ);
+    /*Place th Si Shim*/
+    _OSCGeom.SiBigShim(0,0,5*mm,12*cm,12*cm,200*um,"BaseSiPiece", 1);
 
-    G4Tubs* FlangeShape1 = new G4Tubs("CryostatFlange",0,FlangeRadius,FlangeThickness,0.0*deg,360.0*deg);
-    G4LogicalVolume* logicFlange = new G4LogicalVolume(FlangeShape1, flange_mat, "CryostatFlange");
-
-    new G4PVPlacement (0,
-                        flange_pos,
-                        logicFlange,
-                        "CryostatFlange",
-                        logicWorld,
-                        false,
-                        0,
-                        checkOverlaps);
+    /*Place a CCD on it*/
+    double _1k6k_length = 17942*um;
+    double _1k6k_width = 94742*um;
 
 
-    /*Tube connecting the flange to the body*/
-    G4Material* port_mat = nist->FindOrBuildMaterial("G4_STAINLESS-STEEL");
-    G4ThreeVector port_pos = G4ThreeVector(0,0,FlangeThickness);
+    double _SiShimThickness = 200*um;
+    double _CCDThickness = 675*um;
+    double _CCDZPosition = (_SiShimThickness+_CCDThickness);
 
-    G4Tubs* PortShape1 = new G4Tubs("CryostatPort",PortRadiusOD-PortThickness,PortRadiusOD,PortLength,0.0*deg,360.0*deg);
-    G4LogicalVolume* logicPort = new G4LogicalVolume(PortShape1, port_mat, "CryostatPort");
+    for (int i=0; i<6; i++){
+        G4String _CCDModulename = "CCDModule"+std::to_string(i);
 
-    new G4PVPlacement (0,
-                        port_pos,
-                        logicPort,
-                        "CryostatPort",
-                        logicWorld,
-                        false,
-                        0,
-                        checkOverlaps);
+        double CCD_x = i*(_1k6k_length+1.5*mm)-6*cm+1.75*mm+_1k6k_length/2.0;
+        double CCD_y = 0;
 
+        _OSCGeom.CCD_1kBy6k(CCD_x, CCD_y, 5*mm-_CCDZPosition,_CCDModulename,1);
 
-    /** BOX for the CCD **/
+        /*Readout chips*/
+        G4String ChipName = _CCDModulename+"chip1";
+        double ChipPosition_dx = _1k6k_length/2.0-3*mm;
 
+        _OSCGeom.ReadoutChipCROC(CCD_x-ChipPosition_dx, CCD_y + (_1k6k_width/2 + 3*mm), 5*mm-_CCDZPosition, ChipName, 1);
+        ChipName = _CCDModulename+"chip2";
+        _OSCGeom.ReadoutChipCROC(CCD_x+ChipPosition_dx, CCD_y + (_1k6k_width/2 + 3*mm), 5*mm-_CCDZPosition, ChipName, 1);
+        ChipName = _CCDModulename+"chip3";
+        _OSCGeom.ReadoutChipCROC(CCD_x-ChipPosition_dx, CCD_y - (_1k6k_width/2 + 3*mm), 5*mm-_CCDZPosition, ChipName, 1);
+        ChipName = _CCDModulename+"chip4";
+        _OSCGeom.ReadoutChipCROC(CCD_x+ChipPosition_dx, CCD_y - (_1k6k_width/2 + 3*mm), 5*mm-_CCDZPosition, ChipName, 1);
+
+    }
+
+    /*Kapton Cable*/
+    G4RotationMatrix Rm;
+    _OSCGeom.KaptonCableStrip(0, 7*cm, 5*mm-200*um, "CableU", Rm);
+    Rm.rotateZ(180*deg);
+    _OSCGeom.KaptonCableStrip(0, -7*cm, 5*mm-200*um, "CableL", Rm);
 
 
 
 
     /*Place detector*/
     G4Material* CCD1_mat = nist->FindOrBuildMaterial("G4_Si");
-    G4ThreeVector pos1 = G4ThreeVector(0,0,detectorZ);
+    G4ThreeVector pos1 = G4ThreeVector(0,0,100*mm);
 
-    G4Box* ccdShape1 = new G4Box("ccd1",detectorLW,detectorLW,detectorThickness);
+    G4Box* ccdShape1 = new G4Box("ccd1",10*mm,10*mm,675*um);
     G4LogicalVolume* logicCCD1 = new G4LogicalVolume(ccdShape1, CCD1_mat, "ccd1");
 
     new G4PVPlacement (0,

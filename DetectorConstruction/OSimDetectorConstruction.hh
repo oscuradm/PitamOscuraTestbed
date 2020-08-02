@@ -18,8 +18,8 @@ class G4LogicalVolume;
 class OSimDetectorConstruction : public G4VUserDetectorConstruction
 {
     public:
-    PitamDetectorConstruction();
-    virtual ~PitamDetectorConstruction();
+    OSimDetectorConstruction();
+    virtual ~OSimDetectorConstruction();
 
     virtual G4VPhysicalVolume* Construct();
 

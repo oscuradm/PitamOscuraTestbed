@@ -3,6 +3,8 @@
 # Setup the project
 cmake_minimum_required(VERSION 2.6 FATAL_ERROR)
 project(B1)
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 #----------------------------------------------------------------------------
 # Find Geant4 package, activating all available UI and Vis drivers by default
@@ -35,7 +37,8 @@ set(SOURCE
    ${CMAKE_CURRENT_SOURCE_DIR}/SimActions/PrimaryGenerator.cc
    ${CMAKE_CURRENT_SOURCE_DIR}/SimActions/RunAction.cc
    ${CMAKE_CURRENT_SOURCE_DIR}/SimActions/SteppingAction.cc
-   ${PROJECT_SOURCE_DIR}/DetectorConstruction/PitamDetectorConstruction.cc
+   ${PROJECT_SOURCE_DIR}/DetectorConstruction/OSimDetectorConstruction.cc
+   ${PROJECT_SOURCE_DIR}/DetectorConstruction/OscuraBuildingBlocks.cc
    )
 
 
@@ -45,7 +48,8 @@ set(HEADERS
    ${CMAKE_CURRENT_SOURCE_DIR}/SimActions/PrimaryGenerator.hh
    ${CMAKE_CURRENT_SOURCE_DIR}/SimActions/RunAction.hh
    ${CMAKE_CURRENT_SOURCE_DIR}/SimActions/SteppingAction.hh
-   ${PROJECT_SOURCE_DIR}/DetectorConstruction/PitamDetectorConstruction.hh
+   ${PROJECT_SOURCE_DIR}/DetectorConstruction/OSimDetectorConstruction.hh
+   ${PROJECT_SOURCE_DIR}/DetectorConstruction/OscuraBuildingBlocks.hh
    )
 
 #----------------------------------------------------------------------------

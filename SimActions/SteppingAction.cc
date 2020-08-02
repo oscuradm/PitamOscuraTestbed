@@ -4,7 +4,7 @@
 
 #include "SteppingAction.hh"
 #include "EventAction.hh"
-#include "PitamDetectorConstruction.hh"
+#include "OSimDetectorConstruction.hh"
 
 #include "G4Step.hh"
 #include "G4Event.hh"
@@ -23,7 +23,7 @@ void SteppingAction::UserSteppingAction(const G4Step* step){
 
     if (!fScoringVolume){
 
-        const PitamDetectorConstruction* detectorConstruction = static_cast<const PitamDetectorConstruction*> (G4RunManager::GetRunManager()->GetUserDetectorConstruction());
+        const OSimDetectorConstruction* detectorConstruction = static_cast<const OSimDetectorConstruction*> (G4RunManager::GetRunManager()->GetUserDetectorConstruction());
         fScoringVolume = detectorConstruction->GetScoringVolume();
     }
 

@@ -2,7 +2,7 @@
 
 
 /*Detector construction goes here*/
-#include "PitamDetectorConstruction.hh"
+#include "OSimDetectorConstruction.hh"
 #include "ActionInitialization.hh"
 
 /*Run manager goes here*/
@@ -59,7 +59,7 @@ int main(int argc, char** argv){
      */
 
     /*Detector construction - TODO*/
-    runManager->SetUserInitialization(new PitamDetectorConstruction());
+    runManager->SetUserInitialization(new OSimDetectorConstruction());
 
     /*Physics list - TODO*/
     G4VModularPhysicsList* physicsList = new QBBC;
