@@ -5,6 +5,7 @@
 #include "OscuraBuildingBlocks.hh"
 
 #include "SimGlobalSettings.hh"
+#include "SensitiveDetector.hh"
 
 
 #include "G4RunManager.hh"
@@ -18,6 +19,7 @@
 #include "G4LogicalVolume.hh"
 #include "G4PVPlacement.hh"
 #include "G4SystemOfUnits.hh"
+#include "G4SDManager.hh"
 
 
 
@@ -32,6 +34,15 @@ G4VPhysicalVolume* OSimDetectorConstruction::Construct(){
 
     /*First we need the material manager*/
     G4NistManager* nist  = G4NistManager::Instance();
+
+    /*Lets construct the sensitive detector here - we will add LogicalVolumes to it
+     *as we construct our detector
+     */
+
+    G4VSensitiveDetector* pSensitivePart = new OscuraSensitiveDetector("/OscuraDet");
+    G4SDManager* SDMan = G4SDManager::GetSDMpointer();
+    SDMan->AddNewDetector(pSensitivePart);
+    //and thats it - set volumes to sensitive by G4VLogicalVolume->SetSensitiveDetector(pSensitivePart) !!
 
     /*We are skipping the "envelope"*/
 
@@ -87,7 +98,9 @@ G4VPhysicalVolume* OSimDetectorConstruction::Construct(){
         double CCD_x = i*(_1k6k_length+1.5*mm)-6*cm+1.75*mm+_1k6k_length/2.0;
         double CCD_y = 0;
 
-        _OSCGeom.CCD_1kBy6k(CCD_x, CCD_y, 5*mm-_CCDZPosition,_CCDModulename,1);
+        /*Set a CCD module and mark this as a sensitive detector*/
+        G4LogicalVolume *_thisCCDModule = _OSCGeom.CCD_1kBy6k(CCD_x, CCD_y, 5*mm-_CCDZPosition,_CCDModulename,1);
+        _thisCCDModule->SetSensitiveDetector(pSensitivePart);
 
         /*Readout chips*/
         G4String ChipName = _CCDModulename+"chip1";

@@ -15,8 +15,11 @@
 #include "G4UnitsTable.hh"
 #include "G4SystemOfUnits.hh"
 
+#include "OscuraAnalysis.hh"
 
-PitamRunAction::PitamRunAction() :G4UserRunAction(),fEdep(0.), fEdep2(0.) {
+
+PitamRunAction::PitamRunAction(OSimDetectorConstruction* det, PrimaryGeneratorAction* prim) :G4UserRunAction(),fEdep(0.), fEdep2(0.),
+  fDetector(det), fPrimary(prim) {
 
 
     // add new units for dose
@@ -52,7 +55,24 @@ void PitamRunAction::BeginOfRunAction(const G4Run* run)
     G4AccumulableManager* accumulableManager = G4AccumulableManager::Instance();
     accumulableManager->Reset();
 
+     // keep run condition
+    if (fPrimary) {
+        G4ParticleDefinition* particle
+        = fPrimary->GetParticleGun()->GetParticleDefinition();
+        G4double energy = fPrimary->GetParticleGun()->GetParticleEnergy();
+        //fRun->SetPrimary(particle, energy);
+        fParticle = particle;
+        fEkin = energy;
+    }
 
+
+
+    /*Analysis manager with a histogram for energy deposition*/
+    G4AnalysisManager* analysisManager = G4AnalysisManager::Instance();
+    analysisManager->SetVerboseLevel(1);
+    analysisManager->OpenFile("OscuraESpectrum");
+    analysisManager->CreateH1("Edep","Energy deposit", 100, 0., 8*keV);
+        //analysisManager->CreateH1("Tlen","Track length", 100, 0., 100*mm)
 
 }
 
@@ -62,10 +82,23 @@ void PitamRunAction::EndOfRunAction(const G4Run* run)
     G4int nofEvents = run->GetNumberOfEvent();
     if (nofEvents==0) return;
 
+    //save histograms
+    G4AnalysisManager* analysisManager = G4AnalysisManager::Instance();
+    analysisManager->Write();
+    analysisManager->CloseFile();
+
+
+    // show Rndm status
+    if (isMaster) G4Random::showEngineStatus();
+
+
+
     // Compute dose = total energy deposit in a run and its variance
     //
     G4double edep  = fEdep.GetValue();
     G4double edep2 = fEdep2.GetValue();
+
+
 
     G4double rms = edep2 - edep*edep/nofEvents;
     if (rms > 0.) rms = std::sqrt(rms); else rms = 0.;

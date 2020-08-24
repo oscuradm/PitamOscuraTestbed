@@ -37,7 +37,7 @@ OscuraDetectorGeometry::OscuraDetectorGeometry(G4LogicalVolume* lgWorld):OscuraD
 }
 
 //CCDs
-void OscuraDetectorGeometry::CCD_1kBy6k(double x, double y, double z, G4String CCDName, bool checkOverlaps){
+G4LogicalVolume* OscuraDetectorGeometry::CCD_1kBy6k(double x, double y, double z, G4String CCDName, bool checkOverlaps){
 
 
     G4Material* CCD1_mat = nist->FindOrBuildMaterial("G4_Si");
@@ -61,6 +61,8 @@ void OscuraDetectorGeometry::CCD_1kBy6k(double x, double y, double z, G4String C
                         false,
                         0,
                         checkOverlaps);
+
+    return logicCCD1;
 
 
 }
@@ -129,16 +131,30 @@ void OscuraDetectorGeometry::KaptonCableStrip(double x, double y, double z, G4St
     //Create packaged SOIC material which is a combination of Si and Epoxy,
     //Not including the wire used to bond.
     G4Material* KaptonMat = nist->FindOrBuildMaterial("G4_KAPTON");
+    G4Material* TracesMat = nist->FindOrBuildMaterial("G4_Cu");
+
+
     G4ThreeVector pos1 = G4ThreeVector(x,y,z);
-
-
-    G4Box* KaptonShapeLong = new G4Box(CableName,12*cm/2,2*cm/2,200*um/2);
     G4String SName = CableName+"_stub";
-    G4Box* KaptonShapeStub = new G4Box(SName,4*cm/2,6*cm/2,200*um/2);
+
+    double KaptonThickness = 50.8*um;
+    double CuThickness = 18*um;
+
+    /*Kapton Cable layers - Geometry*/
+    G4Box* KaptonShapeLong = new G4Box(CableName,12*cm/2,2*cm/2,KaptonThickness*um/2);
+    G4Box* KaptonShapeStub = new G4Box(SName,4*cm/2,6*cm/2,KaptonThickness*um/2);
+    /*Cu Cable layers - Geometry*/
+    G4Box* CopperShapeLong = new G4Box(CableName,12*cm/2,2*cm/2,CuThickness*um/2);
+    G4Box* CopperShapeStub = new G4Box(SName,4*cm/2,6*cm/2,CuThickness*um/2);
 
 
-    G4LogicalVolume* logicalVKaptonLong = new G4LogicalVolume(KaptonShapeLong, KaptonMat, CableName+"LV");
-    G4LogicalVolume* logicalVKaptonStub = new G4LogicalVolume(KaptonShapeStub, KaptonMat, SName+"LV");
+    /*Kapton LV Layers*/
+    G4LogicalVolume* logicalVKaptonLong = new G4LogicalVolume(KaptonShapeLong, KaptonMat, CableName+"LVPI");
+    G4LogicalVolume* logicalVKaptonStub = new G4LogicalVolume(KaptonShapeStub, KaptonMat, SName+"LVPI");
+    /*Copper LV layers*/
+    G4LogicalVolume* logicalVCuLong = new G4LogicalVolume(CopperShapeLong, TracesMat, CableName+"LVCu");
+    G4LogicalVolume* logicalVCuStub = new G4LogicalVolume(CopperShapeStub, TracesMat, SName+"LVCu");
+
 
     G4VisAttributes KaptonVisAtt(TolVibOrange);
     logicalVKaptonStub->SetVisAttributes(KaptonVisAtt);
@@ -147,18 +163,36 @@ void OscuraDetectorGeometry::KaptonCableStrip(double x, double y, double z, G4St
 
 
     G4AssemblyVolume* assemblyKapton = new G4AssemblyVolume();
+
     //This is for rotation and translation
-    G4RotationMatrix Ra; G4ThreeVector Ta;
+    G4RotationMatrix Ra; G4ThreeVector Ta; G4Transform3D TR;
+    double _z = 0; //This vaariable keeps track of the layers
 
+    /*PI layer top*/
+    Ta.setX( 0 ); Ta.setY( 0 ); Ta.setZ( _z ); TR =  G4Transform3D(Ra,Ta); assemblyKapton->AddPlacedVolume(logicalVKaptonLong, TR);
+    Ta.setX( 0 ); Ta.setY( 4*cm ); Ta.setZ( _z ); TR =  G4Transform3D(Ra,Ta); assemblyKapton->AddPlacedVolume(logicalVKaptonStub, TR);
+    _z = KaptonThickness; //Next layers will start with this height.
 
+    /*Cu layer top*/
+    Ta.setX( 0 ); Ta.setY( 0 ); Ta.setZ( _z ); TR =  G4Transform3D(Ra,Ta); assemblyKapton->AddPlacedVolume(logicalVCuLong, TR);
+    Ta.setX( 0 ); Ta.setY( 4*cm ); Ta.setZ( _z ); TR =  G4Transform3D(Ra,Ta); assemblyKapton->AddPlacedVolume(logicalVCuStub, TR);
+    _z += CuThickness; //Next layers will start with this height.
 
-    //Fill up the assembly volume
-    Ta.setX( 0 ); Ta.setY( 0 ); Ta.setZ( 0 );
-    G4Transform3D TR =  G4Transform3D(Ra,Ta);
-    assemblyKapton->AddPlacedVolume(logicalVKaptonLong, TR);
+    /*PI Layer Middle*/
+    Ta.setX( 0 ); Ta.setY( 0 ); Ta.setZ( _z ); TR =  G4Transform3D(Ra,Ta); assemblyKapton->AddPlacedVolume(logicalVKaptonLong, TR);
+    Ta.setX( 0 ); Ta.setY( 4*cm ); Ta.setZ( _z ); TR =  G4Transform3D(Ra,Ta); assemblyKapton->AddPlacedVolume(logicalVKaptonStub, TR);
+    _z += KaptonThickness; //Next layers will start with this height.
 
-    Ta.setX( 0 ); Ta.setY( 4*cm ); Ta.setZ( 0 ); TR =  G4Transform3D(Ra,Ta);
-    assemblyKapton->AddPlacedVolume(logicalVKaptonStub, TR);
+    /*Cu layer bot*/
+    Ta.setX( 0 ); Ta.setY( 0 ); Ta.setZ( _z ); TR =  G4Transform3D(Ra,Ta); assemblyKapton->AddPlacedVolume(logicalVCuLong, TR);
+    Ta.setX( 0 ); Ta.setY( 4*cm ); Ta.setZ( _z ); TR =  G4Transform3D(Ra,Ta); assemblyKapton->AddPlacedVolume(logicalVCuStub, TR);
+    _z += CuThickness; //Next layers will start with this height.
+
+    /*PI Layer Bot*/
+    Ta.setX( 0 ); Ta.setY( 0 ); Ta.setZ( _z ); TR =  G4Transform3D(Ra,Ta); assemblyKapton->AddPlacedVolume(logicalVKaptonLong, TR);
+    Ta.setX( 0 ); Ta.setY( 4*cm ); Ta.setZ( _z ); TR =  G4Transform3D(Ra,Ta); assemblyKapton->AddPlacedVolume(logicalVKaptonStub, TR);
+    _z += KaptonThickness; //Next layers will start with this height.
+
 
 
     G4ThreeVector Tm(x,y,z);

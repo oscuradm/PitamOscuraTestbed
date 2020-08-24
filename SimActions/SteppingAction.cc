@@ -11,7 +11,9 @@
 #include "G4RunManager.hh"
 #include "G4LogicalVolume.hh"
 
-SteppingAction::SteppingAction(EventAction* _eventAction):G4UserSteppingAction(),fEventAction(_eventAction),fScoringVolume(0){
+#include "OscuraAnalysis.hh"
+
+SteppingAction::SteppingAction(OSimDetectorConstruction* det, EventAction* _eventAction):G4UserSteppingAction(),fDetector(det),fEventAction(_eventAction),fScoringVolume(0){
 }
 
 SteppingAction::~SteppingAction(){
@@ -36,5 +38,10 @@ void SteppingAction::UserSteppingAction(const G4Step* step){
 
     G4double edepStep = step->GetTotalEnergyDeposit();
     fEventAction->AddEdep(edepStep);
+
+    //G4AnalysisManager* analysisManager = G4AnalysisManager::Instance();
+    //G4int id=2;
+    //analysisManager->FillNtupleDColumn(id,0, edepStep);
+
 }
 

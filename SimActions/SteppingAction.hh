@@ -10,14 +10,14 @@
 
 
 class EventAction;
-
 class G4LogicalVolume;
+class OSimDetectorConstruction;
 
 
 class SteppingAction : public G4UserSteppingAction{
 
     public:
-        SteppingAction(EventAction* _eventAction);
+        SteppingAction(OSimDetectorConstruction* det, EventAction* _eventAction);
         virtual ~SteppingAction();
 
 
@@ -26,6 +26,7 @@ class SteppingAction : public G4UserSteppingAction{
     private:
         EventAction* fEventAction;
         G4LogicalVolume* fScoringVolume;
+        OSimDetectorConstruction* fDetector;
 
 };
 

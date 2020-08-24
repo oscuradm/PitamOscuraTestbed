@@ -4,6 +4,7 @@
 /*Detector construction goes here*/
 #include "OSimDetectorConstruction.hh"
 #include "ActionInitialization.hh"
+#include "PhysicsList.hh"
 
 /*Run manager goes here*/
 #ifdef G4MULTITHREADED
@@ -38,6 +39,7 @@ int main(int argc, char** argv){
     //G4Random::setTheEngine(new CLHEP::MTwistEngine) for Mersenne-Twister
     //G4Random maps to CLHEP::HEPRandom
     //See: https://www.zeuthen.desy.de/ILC/geant4/clhep-2.0.4.3/classCLHEP_1_1HepRandom.html
+    G4Random::setTheEngine(new CLHEP::RanecuEngine);
 
     /*Construct the run manager*/
     #ifdef G4MULTITHREADED
@@ -59,15 +61,19 @@ int main(int argc, char** argv){
      */
 
     /*Detector construction - TODO*/
-    runManager->SetUserInitialization(new OSimDetectorConstruction());
+    OSimDetectorConstruction* det= new OSimDetectorConstruction();
+    runManager->SetUserInitialization(det);
 
     /*Physics list - TODO*/
-    G4VModularPhysicsList* physicsList = new QBBC;
-    physicsList->SetVerboseLevel(1);
+    //G4VModularPhysicsList* physicsList = new QBBC;
+    //physicsList->SetVerboseLevel(1);
+
+    PhysicsList* physicsList = new PhysicsList;
     runManager->SetUserInitialization(physicsList);
 
+
      // User action initialization
-    runManager->SetUserInitialization(new ActionInitialization());
+    runManager->SetUserInitialization(new ActionInitialization(det));
 
 
     /*Visualization - optional*/

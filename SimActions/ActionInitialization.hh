@@ -7,16 +7,22 @@
 
 #include "G4VUserActionInitialization.hh"
 
+class OSimDetectorConstruction;
+
+
 
  class ActionInitialization : public G4VUserActionInitialization{
 
 
     public:
-        ActionInitialization();
+        ActionInitialization(OSimDetectorConstruction* detector);
         virtual ~ActionInitialization();
 
         virtual void BuildForMaster() const;
         virtual void Build() const;
+
+    private:
+        OSimDetectorConstruction* fDetector;
  };
 
  #endif

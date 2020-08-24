@@ -45,7 +45,7 @@ class OscuraDetectorGeometry : public OscuraDetectorMaterials {
 
 
     //CCDs
-    void CCD_1kBy6k(double x, double y, double z, G4String CCDName, bool checkOverlaps);
+    G4LogicalVolume* CCD_1kBy6k(double x, double y, double z, G4String CCDName, bool checkOverlaps);
 
 
     //Si strips
