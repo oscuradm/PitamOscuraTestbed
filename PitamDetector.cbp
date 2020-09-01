@@ -39,16 +39,25 @@
 		<Unit filename="DetectorConstruction/OscuraBuildingBlocks.hh" />
 		<Unit filename="SimActions/ActionInitialization.cc" />
 		<Unit filename="SimActions/ActionInitialization.hh" />
+		<Unit filename="SimActions/BiasedRDPhysics.cc" />
+		<Unit filename="SimActions/BiasedRDPhysics.hh" />
 		<Unit filename="SimActions/EventAction.cc" />
 		<Unit filename="SimActions/EventAction.hh" />
+		<Unit filename="SimActions/OscuraAnalysis.hh" />
+		<Unit filename="SimActions/PhysicsList.cc" />
+		<Unit filename="SimActions/PhysicsList.hh" />
 		<Unit filename="SimActions/PrimaryGenerator.cc" />
 		<Unit filename="SimActions/PrimaryGenerator.hh" />
 		<Unit filename="SimActions/RunAction.cc" />
 		<Unit filename="SimActions/RunAction.hh" />
+		<Unit filename="SimActions/SensitiveDetector.cc" />
+		<Unit filename="SimActions/SensitiveDetector.hh" />
 		<Unit filename="SimActions/SimGlobalSettings.hh" />
 		<Unit filename="SimActions/SteppingAction.cc" />
 		<Unit filename="SimActions/SteppingAction.hh" />
+		<Unit filename="init_vis.mac" />
 		<Unit filename="pitam1.cc" />
+		<Unit filename="vis.mac" />
 		<Extensions />
 	</Project>
 </CodeBlocks_project_file>

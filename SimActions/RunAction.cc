@@ -71,7 +71,7 @@ void PitamRunAction::BeginOfRunAction(const G4Run* run)
     G4AnalysisManager* analysisManager = G4AnalysisManager::Instance();
     analysisManager->SetVerboseLevel(1);
     analysisManager->OpenFile("OscuraESpectrum");
-    analysisManager->CreateH1("Edep","Energy deposit", 100, 0., 8*keV);
+    analysisManager->CreateH1("Edep","Energy deposit", 1000, 0., 50*keV);
         //analysisManager->CreateH1("Tlen","Track length", 100, 0., 100*mm)
 
 }

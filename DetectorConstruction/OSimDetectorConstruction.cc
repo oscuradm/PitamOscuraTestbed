@@ -39,9 +39,11 @@ G4VPhysicalVolume* OSimDetectorConstruction::Construct(){
      *as we construct our detector
      */
 
-    G4VSensitiveDetector* pSensitivePart = new OscuraSensitiveDetector("/OscuraDet");
-    G4SDManager* SDMan = G4SDManager::GetSDMpointer();
-    SDMan->AddNewDetector(pSensitivePart);
+
+    //G4String SDName = "OscuraDetSD";
+    //G4VSensitiveDetector* pSensitivePart = new OscuraSensitiveDetector(SDName);
+    //G4SDManager* SDMan = G4SDManager::GetSDMpointer();
+    //SDMan->AddNewDetector(pSensitivePart);
     //and thats it - set volumes to sensitive by G4VLogicalVolume->SetSensitiveDetector(pSensitivePart) !!
 
     /*We are skipping the "envelope"*/
@@ -92,6 +94,9 @@ G4VPhysicalVolume* OSimDetectorConstruction::Construct(){
     double _CCDThickness = 675*um;
     double _CCDZPosition = (_SiShimThickness+_CCDThickness);
 
+
+    std::vector<G4LogicalVolume*> AllCCDLogVols;
+
     for (int i=0; i<6; i++){
         G4String _CCDModulename = "CCDModule"+std::to_string(i);
 
@@ -99,8 +104,9 @@ G4VPhysicalVolume* OSimDetectorConstruction::Construct(){
         double CCD_y = 0;
 
         /*Set a CCD module and mark this as a sensitive detector*/
-        G4LogicalVolume *_thisCCDModule = _OSCGeom.CCD_1kBy6k(CCD_x, CCD_y, 5*mm-_CCDZPosition,_CCDModulename,1);
-        _thisCCDModule->SetSensitiveDetector(pSensitivePart);
+        G4LogicalVolume* _thisCCDModule = _OSCGeom.CCD_1kBy6k(CCD_x, CCD_y, 5*mm-_CCDZPosition,_CCDModulename,1);
+        //_thisCCDModule->SetSensitiveDetector(pSensitivePart);
+        AllCCDLogVols.push_back(_thisCCDModule);
 
         /*Readout chips*/
         G4String ChipName = _CCDModulename+"chip1";
@@ -115,6 +121,8 @@ G4VPhysicalVolume* OSimDetectorConstruction::Construct(){
         _OSCGeom.ReadoutChipCROC(CCD_x+ChipPosition_dx, CCD_y - (_1k6k_width/2 + 3*mm), 5*mm-_CCDZPosition, ChipName, 1);
 
     }
+
+
 
     /*Kapton Cable*/
     G4RotationMatrix Rm;
@@ -142,7 +150,10 @@ G4VPhysicalVolume* OSimDetectorConstruction::Construct(){
                         checkOverlaps);
 
     /*Check this*/
-    fScoringVolume = logicCCD1;
+    //fScoringVolume = logicCCD1;
+    fScoringVolume = AllCCDLogVols[4];
+
+    //logicCCD1->SetSensitiveDetector(pSensitivePart);
 
 
     return physWorld;

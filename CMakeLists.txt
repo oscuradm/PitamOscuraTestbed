@@ -6,6 +6,7 @@ project(B1)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+
 #----------------------------------------------------------------------------
 # Find Geant4 package, activating all available UI and Vis drivers by default
 # You can set WITH_GEANT4_UIVIS to OFF via the command line or ccmake/cmake-gui
@@ -32,22 +33,31 @@ include_directories(${PROJECT_SOURCE_DIR}/DetectorConstruction
 # NB: headers are included so they will show up in IDEs
 #
 set(SOURCE
+   ${CMAKE_CURRENT_SOURCE_DIR}/SimActions/SensitiveDetector.cc
    ${CMAKE_CURRENT_SOURCE_DIR}/SimActions/ActionInitialization.cc
    ${CMAKE_CURRENT_SOURCE_DIR}/SimActions/EventAction.cc
    ${CMAKE_CURRENT_SOURCE_DIR}/SimActions/PrimaryGenerator.cc
    ${CMAKE_CURRENT_SOURCE_DIR}/SimActions/RunAction.cc
    ${CMAKE_CURRENT_SOURCE_DIR}/SimActions/SteppingAction.cc
+   ${CMAKE_CURRENT_SOURCE_DIR}/SimActions/PhysicsList.cc
+   ${CMAKE_CURRENT_SOURCE_DIR}/SimActions/BiasedRDPhysics.cc
+   ${CMAKE_CURRENT_SOURCE_DIR}/SimActions/OscuraHits.cc
    ${PROJECT_SOURCE_DIR}/DetectorConstruction/OSimDetectorConstruction.cc
    ${PROJECT_SOURCE_DIR}/DetectorConstruction/OscuraBuildingBlocks.cc
    )
 
 
 set(HEADERS
+   ${CMAKE_CURRENT_SOURCE_DIR}/SimActions/SensitiveDetector.hh
    ${CMAKE_CURRENT_SOURCE_DIR}/SimActions/ActionInitialization.hh
    ${CMAKE_CURRENT_SOURCE_DIR}/SimActions/EventAction.hh
    ${CMAKE_CURRENT_SOURCE_DIR}/SimActions/PrimaryGenerator.hh
    ${CMAKE_CURRENT_SOURCE_DIR}/SimActions/RunAction.hh
    ${CMAKE_CURRENT_SOURCE_DIR}/SimActions/SteppingAction.hh
+   ${CMAKE_CURRENT_SOURCE_DIR}/SimActions/PhysicsList.hh
+   ${CMAKE_CURRENT_SOURCE_DIR}/SimActions/BiasedRDPhysics.hh
+   ${CMAKE_CURRENT_SOURCE_DIR}/SimActions/OscuraAnalysis.hh
+   ${CMAKE_CURRENT_SOURCE_DIR}/SimActions/OscuraHits.hh
    ${PROJECT_SOURCE_DIR}/DetectorConstruction/OSimDetectorConstruction.hh
    ${PROJECT_SOURCE_DIR}/DetectorConstruction/OscuraBuildingBlocks.hh
    )

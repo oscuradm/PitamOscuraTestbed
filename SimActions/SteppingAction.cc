@@ -39,7 +39,8 @@ void SteppingAction::UserSteppingAction(const G4Step* step){
     G4double edepStep = step->GetTotalEnergyDeposit();
     fEventAction->AddEdep(edepStep);
 
-    //G4AnalysisManager* analysisManager = G4AnalysisManager::Instance();
+    G4AnalysisManager* analysisManager = G4AnalysisManager::Instance();
+    analysisManager->FillH1(0,edepStep);
     //G4int id=2;
     //analysisManager->FillNtupleDColumn(id,0, edepStep);
 

@@ -23,6 +23,7 @@ class EventAction : public G4UserEventAction{
     private:
         PitamRunAction* fRunAction;
         G4double fEdep;
+        G4int hitsCollID;
 
 };
 
